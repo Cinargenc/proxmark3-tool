@@ -1,0 +1,38 @@
+[=] Session log /home/kali/.proxmark3/logs/log_20260220110616.txt
+[+] loaded `/home/kali/.proxmark3/preferences.json`
+[+] execute command from commandline: lf search
+
+[+] Using UART port /dev/ttyACM0
+[+] Communicating with PM3 over USB-CDC
+[usb|script] pm3 --> lf search
+
+[=] Note: False Positives ARE possible
+[=] 
+[=] Checking for known tags...
+[=] 
+[+] EM 410x ID 4B0077255C
+[+] EM410x ( RF/64 )
+[=] -------- Possible de-scramble patterns ---------
+[+] Unique TAG ID      : D200EEA43A
+[=] HoneyWell IdentKey
+[+]     DEZ 8          : 07808348
+[+]     DEZ 10         : 0007808348
+[+]     DEZ 5.5        : 00119.09564
+[+]     DEZ 3.5A       : 075.09564
+[+]     DEZ 3.5B       : 000.09564
+[+]     DEZ 3.5C       : 119.09564
+[+]     DEZ 14/IK2     : 00322130355548
+[+]     DEZ 15/IK3     : 000901958771770
+[+]     DEZ 20/ZK      : 13020000141410040310
+[=] 
+[+] Other              : 09564_119_07808348
+[+] Pattern Paxton     : 1267426140 [0x4B8B635C]
+[+] Pattern 1          : 14357790 [0xDB151E]
+[+] Pattern Sebury     : 9564 119 7808348  [0x255C 0x77 0x77255C]
+[+] VD / ID            : 075 / 0007808348
+[+] Pattern ELECTRA    : 19200 7808348
+[=] ------------------------------------------------
+
+[+] Valid EM410x ID found!
+
+[=] Couldn't identify a chipset
