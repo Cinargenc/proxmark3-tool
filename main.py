@@ -1,117 +1,140 @@
-from fingerprint_engine import identify_card
-from card_profiles import CARD_DATABASE
-from parser import parse_log
+"""
+main.py — Proxmark3 Card Security Analyser
 
-from analyzers.uid_analysis import analyze_uid
-from analyzers.protocol_analysis import analyze_protocol
-from analyzers.timing_analysis import analyze_timing
-from analyzers.emv_analysis import analyze_emv
-from analyzers.lf_analysis import analyze_lf
+Usage:
+    python main.py <proxmark3_log_file.txt>
 
-from scoring import calculate_score
-from threat_engine import assess_attacks
-from report import generate_report
+Example:
+    python main.py proxmark_output.txt
+    python main.py proxmark_output2.txt
+    python main.py samples/mifare_classic_1k.txt
+"""
 
 import sys
+import os
+
+# ── Enable ANSI colours on Windows ──────────────────────────────────────────
+if sys.platform == "win32":
+    os.system("color")           # activate VT100 in old cmd.exe
+    # Also patch stdout for Windows Terminal / PowerShell
+    try:
+        import ctypes
+        kernel32 = ctypes.windll.kernel32
+        kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
+    except Exception:
+        pass
+
+from parser            import parse_log
+from fingerprint_engine import identify_card
+from card_profiles     import CARD_DATABASE
+
+from analyzers.uid_analysis      import analyze_uid
+from analyzers.protocol_analysis import analyze_protocol
+from analyzers.timing_analysis   import analyze_timing
+from analyzers.emv_analysis      import analyze_emv
+from analyzers.lf_analysis       import analyze_lf
+from analyzers.mifare_analysis   import analyze_mifare
+
+from scoring       import calculate_score
+from threat_engine import assess_attacks
+from report        import generate_report
 
 
-if len(sys.argv) != 2:
-    print("Usage: python3 main.py logfile.txt")
-    sys.exit(1)
+# ──────────────────────────────────────────────────────────────────────────────
+#  Entry‑point
+# ──────────────────────────────────────────────────────────────────────────────
+
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: python main.py <logfile.txt>")
+        sys.exit(1)
+
+    log_path = sys.argv[1]
+    if not os.path.isfile(log_path):
+        print(f"[!] File not found: {log_path}")
+        sys.exit(1)
+
+    # ── 1. Parse log ──────────────────────────────────────────────────────────
+    log_data = parse_log(log_path)
+
+    # ── 2. Identify card ──────────────────────────────────────────────────────
+    profile_key  = identify_card(log_data)
+    profile      = CARD_DATABASE.get(profile_key, CARD_DATABASE["UNKNOWN"])
+
+    card = {
+        "family":  profile["family"],
+        "profile": profile_key,
+        "sak":     log_data.get("sak", ""),
+        "atqa":    log_data.get("atqa", ""),
+    }
+
+    # ── 3. Analysers ─────────────────────────────────────────────────────────
+    try:
+        uid_data = analyze_uid(log_data)
+    except Exception as e:
+        uid_data = {}
+
+    try:
+        protocol_data = analyze_protocol(log_data)
+    except Exception as e:
+        protocol_data = {}
+
+    try:
+        timing_data = analyze_timing(log_data)
+    except Exception as e:
+        timing_data = {}
+
+    try:
+        emv_data = analyze_emv(log_data)
+    except Exception as e:
+        emv_data = {}
+
+    # LF-specific analysis
+    lf_data = {}
+    if log_data.get("scan_mode") == "LF" or log_data.get("lf_id"):
+        try:
+            lf_data = analyze_lf(log_data)
+            # Merge LF uid info into uid_data
+            uid_data.update({
+                "uid_hex":    lf_data.get("uid", ""),
+                "length":     len(lf_data.get("uid", "")) // 2,
+                "entropy":    lf_data.get("entropy", "Low"),
+                "clone_risk": lf_data.get("clone_risk", "Very High"),
+                "clone_notes": lf_data.get("security_notes", ""),
+            })
+        except Exception as e:
+            lf_data = {}
+
+    # MIFARE Classic analysis
+    mifare_data = {}
+    if profile.get("crypto") == "Crypto1":
+        try:
+            mifare_data = analyze_mifare(log_data, profile)
+        except Exception as e:
+            mifare_data = {}
+
+    # ── 4. Threat assessment ─────────────────────────────────────────────────
+    attacks = assess_attacks(profile, uid_data)
+
+    # ── 5. Risk scoring ───────────────────────────────────────────────────────
+    score, risk = calculate_score(profile, uid_data, protocol_data,
+                                  timing_data, emv_data)
+
+    # ── 6. Generate report ────────────────────────────────────────────────────
+    generate_report(
+        card         = card,
+        uid          = uid_data,
+        protocol     = protocol_data,
+        timing       = timing_data,
+        emv          = emv_data,
+        score        = score,
+        risk         = risk,
+        attacks      = attacks,
+        profile      = profile,
+        lf_data      = lf_data,
+        mifare_data  = mifare_data,
+    )
 
 
-# ----------------------------------------------------------
-# 1️⃣ Parse Log
-# ----------------------------------------------------------
-log_path = sys.argv[1]
-log_data = parse_log(log_path)
-
-# ----------------------------------------------------------
-# 2️⃣ Fingerprint Card Profile
-# ----------------------------------------------------------
-profile_name = identify_card(log_data)
-
-profile = CARD_DATABASE.get(profile_name, {
-    "family": "Unknown",
-    "crypto": False,
-    "mutual_auth": False,
-    "static_uid": True
-})
-
-card = {
-    "family": profile.get("family", "Unknown"),
-    "profile": profile_name
-}
-
-
-# ----------------------------------------------------------
-# 3️⃣ Analyzer Layer (Family bağımsız çalışır)
-# ----------------------------------------------------------
-
-# UID
-try:
-    uid_data = analyze_uid(log_data)
-except:
-    uid_data = {}
-
-# LF özel analiz (varsa override eder)
-if profile.get("family") == "LF 125 kHz":
-    raw_text = open(log_path).read()
-    lf_result = analyze_lf(raw_text)
-
-    uid_data.update({
-        "length": len(lf_result.get("uid", "")),
-        "entropy": lf_result.get("entropy", "Low"),
-        "clone_risk": lf_result.get("clone_risk", "Very High")
-    })
-
-# Protocol
-try:
-    protocol_data = analyze_protocol(log_data)
-except:
-    protocol_data = {}
-
-# Timing
-try:
-    timing_data = analyze_timing(log_data)
-except:
-    timing_data = {}
-
-# EMV / Application
-try:
-    emv_data = analyze_emv(log_data)
-except:
-    emv_data = {}
-
-
-# ----------------------------------------------------------
-# 4️⃣ Threat Simulation (Profile-aware)
-# ----------------------------------------------------------
-attacks = assess_attacks(profile, uid_data)
-
-
-# ----------------------------------------------------------
-# 5️⃣ Risk Scoring (Profile-aware)
-# ----------------------------------------------------------
-score, risk = calculate_score(
-    profile,        # artık family değil profile gönderiyoruz
-    uid_data,
-    protocol_data,
-    timing_data,
-    emv_data
-)
-
-
-# ----------------------------------------------------------
-# 6️⃣ Report Generation
-# ----------------------------------------------------------
-generate_report(
-    card,
-    uid_data,
-    protocol_data,
-    timing_data,
-    emv_data,
-    score,
-    risk,
-    attacks
-)
+if __name__ == "__main__":
+    main()

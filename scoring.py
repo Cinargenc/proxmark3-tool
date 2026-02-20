@@ -1,81 +1,82 @@
-def calculate_score(card, uid, protocol, timing, emv):
+def calculate_score(profile: dict, uid: dict, protocol: dict,
+                    timing: dict, emv: dict) -> tuple:
+    """
+    Calculate a 0-100 risk score and a risk category string.
 
+    Higher score = higher risk / easier to attack.
+    """
     score = 0
 
-    # -----------------------------
-    # 1 CARD FAMILY BASE SCORE
-    # -----------------------------
-    # Not: 'profile' yerine parametre olarak gelen 'card' sözlüğü kullanıldı
-    if not card.get("crypto"):
-        score += 35
+    # ── 1. Cryptographic base ─────────────────────────────────────────────────
+    if not profile.get("crypto"):
+        score += 40                     # No encryption at all (LF, Ultralight)
+    elif profile.get("broken_crypto"):
+        score += 30                     # Broken Crypto1
+    else:
+        score += 0                      # Strong crypto (AES, RSA)
 
-    if card.get("broken_crypto"):
-        score += 20
-
-    if not card.get("mutual_auth"):
+    # ── 2. Authentication model ───────────────────────────────────────────────
+    if not profile.get("mutual_auth"):
         score += 15
 
-    if card.get("static_uid"):
-        score += 15
-
-    # -----------------------------
-    # 2 CLONE RISK
-    # -----------------------------
+    # ── 3. UID / ID clonability ───────────────────────────────────────────────
     clone_risk = uid.get("clone_risk", "Unknown")
+    clone_weight = {
+        "Very High": 25,
+        "High":      18,
+        "Medium":    10,
+        "Low":        3,
+        "Unknown":    0,
+    }
+    score += clone_weight.get(clone_risk, 0)
 
-    if clone_risk == "Very High":
-        score += 30
-    elif clone_risk == "High":
-        score += 20
-    elif clone_risk == "Medium":
-        score += 10
-
-    # -----------------------------
-    # 3 CRYPTO / PROTOCOL
-    # -----------------------------
-    apdu = protocol.get("apdu", False)
-    cid = protocol.get("cid_supported", False)
-
-    if not apdu:
-        score += 10
-
-    if not cid:
+    # ── 4. Protocol security ──────────────────────────────────────────────────
+    if not protocol.get("apdu"):
         score += 5
+    if not protocol.get("cid_supported"):
+        score += 3
 
-    # -----------------------------
-    # 4 APPLICATION RISK
-    # -----------------------------
-    relay = emv.get("relay_risk", "Low")
-    skimming = emv.get("skimming_risk", "Low")
+    # ── 5. Timing / relay window ──────────────────────────────────────────────
+    relay_window = timing.get("relay_window", "")
+    relay_weight = {
+        "Very Wide":  10,
+        "Wide":        7,
+        "Moderate":    4,
+        "Tight":       1,
+    }
+    score += relay_weight.get(relay_window, 0)
 
-    if relay == "High":
-        score += 10
-    if skimming == "High":
-        score += 10
+    # ── 6. EMV / payment card application risks ───────────────────────────────
+    if emv.get("skimming_risk") == "High":
+        score += 8
+    elif emv.get("skimming_risk") == "Medium":
+        score += 4
 
-    # -----------------------------
-    # 5 ENTROPY BONUS / PENALTY
-    # -----------------------------
+    if emv.get("relay_risk") == "High":
+        score += 5
+    elif emv.get("relay_risk") == "Medium":
+        score += 3
+
+    # ── 7. Entropy bonus / penalty ────────────────────────────────────────────
     entropy = uid.get("entropy", "Unknown")
-
     if entropy == "Low":
         score += 5
     elif entropy == "High":
         score -= 5
 
-    # -----------------------------
-    # SCORE NORMALIZATION
-    # -----------------------------
+    # ── 8. Payment card bonus (known good cryptography) ───────────────────────
+    if profile.get("payment_card"):
+        score -= 10      # EMV has strong transaction crypto
+
+    # ── Normalise ─────────────────────────────────────────────────────────────
     score = max(0, min(score, 100))
 
-    # -----------------------------
-    # RISK CATEGORY
-    # -----------------------------
+    # ── Category ──────────────────────────────────────────────────────────────
     if score >= 75:
         risk = "CRITICAL"
-    elif score >= 60:
+    elif score >= 55:
         risk = "HIGH"
-    elif score >= 40:
+    elif score >= 35:
         risk = "MEDIUM"
     else:
         risk = "LOW"

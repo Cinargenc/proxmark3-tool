@@ -1,0 +1,18 @@
+[=] Session log /home/kali/.proxmark3/logs/log_20260220120000.txt
+[+] loaded `/home/kali/.proxmark3/preferences.json`
+[+] execute command from commandline: hf search
+
+[+] Using UART port /dev/ttyACM0
+[+] Communicating with PM3 over USB-CDC
+[usb|script] pm3 --> hf search
+
+[=] ---------- ISO14443-A Information ----------
+[+]  UID: A3 2B 5F 7C   ( single )
+[+] ATQA: 00 04
+[+]  SAK: 08 [2]
+[+]       NXP Semiconductors Germany
+[+] Possible types:
+[+]    MIFARE Classic 1K
+[+]    MIFARE Classic 1K (Emulated)
+
+[+] Valid ISO 14443-A tag found

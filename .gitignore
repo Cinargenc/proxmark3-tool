@@ -1,0 +1,17 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Generated JSON reports — don't commit these
+report_*.json
+
+# Virtual envs
+venv/
+.venv/
+env/
+
+# OS junk
+.DS_Store
+Thumbs.db
