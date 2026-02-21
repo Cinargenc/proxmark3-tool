@@ -1,12 +1,0 @@
-[=] Session log /home/kali/.proxmark3/logs/log_20260220110531.txt
-[+] loaded `/home/kali/.proxmark3/preferences.json`
-[+] execute command from commandline: hf search
-
-[+] Using UART port /dev/ttyACM0
-[+] Communicating with PM3 over USB-CDC
-[usb|script] pm3 --> hf search
-[\]                                          [|] Searching for ThinFilm tag...[/]                                          [-] Searching for Topaz tag...[\]                                          [|] Searching for LTO-CM tag...[/]                                          [-] Searching for ISO14443-A tag...[\]                                          [|] Searching for LEGIC tag...[/]                                          [-] Searching for TEXKOM tag...[=] Waiting for a response from the Proxmark3...
-[=] You can cancel this operation by pressing the pm3 button
-[-] Timed out while trying to download data from device
-[!] timeout while waiting for reply
-[\]                                          [|] Searching for Fuji/Xerox tag...[/]                                          [-] Searching for ISO14443-B tag...[\]                                          [|] Searching for ISO15693 tag...[/]                                          [-] Searching for iCLASS / PicoPass tag...[\]                                          [|] Searching for FeliCa tag...[/]                                          [!] No known/supported 13.56 MHz tags found

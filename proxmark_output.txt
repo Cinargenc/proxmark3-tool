@@ -1,59 +1,0 @@
-[=] Session log /home/kali/.proxmark3/logs/log_20260220104811.txt
-[+] loaded `/home/kali/.proxmark3/preferences.json`
-[+] execute command from commandline: hf search
-
-[+] Using UART port /dev/ttyACM0
-[+] Communicating with PM3 over USB-CDC
-[usb|script] pm3 --> hf search
-[\]                                          [|] Searching for ThinFilm tag...[/]                                          [-] Searching for Topaz tag...[\]                                          [|] Searching for LTO-CM tag...[/]                                          [-] Searching for ISO14443-A tag...
-[=] ---------- ISO14443-A Information ----------
-[+]  UID: 04 43 BF 22 3E 18 90   ( double )
-[+] ATQA: 00 48
-[+]  SAK: 20 [1]
-[+]       NXP Semiconductors Germany
-[+] Possible types:
-[+]    EMV
-[=] -------------------------- ATS ----------------------------------
-[+] ATS: 12 78 80 71 02 00 31 C1 73 C8 40 00 52 B2 F4 00 90 00 [ ED BA ]
-[=]      12...............  TL    length is 18 bytes
-[=]      ...78............  T0    TA1 is present, TB1 is present, TC1 is present, FSCI is 8 (FSC = 256)
-[=]      ......80.........  TA1   different divisors are NOT supported, DR: [], DS: []
-[=]      .........71......  TB1   SFGI = 1 (SFGT = 8192/fc), FWI = 7 (FWT = 524288/fc)
-[=]      ............02...  TC1   NAD is NOT supported, CID is supported
-
-[=] -------------------- Historical bytes ---------------------------
-[+] 0031C173C8400052B2F4009000  (compact TLV data object)
-[=]     31  C1   Card service data byte
-[=]     1.......    Application selection: by full DF name
-[=]     .1......    Application selection: by partial DF name
-[=]     ..0.....    BER-TLV data objects available in EF.DIR
-[=]     ...0....    BER-TLV data objects available in EF.ATR
-[=]     ....0...    EF.DIR and EF.ATR access services: by READ BINARY command
-[=]     .....0..    EF.DIR and EF.ATR access services: by GET DATA command
-[=]     ......0.    EF.DIR and EF.ATR access services: by GET RECORD(s) command
-[=]     .......1    EF.DIR and EF.ATR access services: RFU
-[=]     73 C84000   Card capabilities
-[=]     C8 - Selection methods
-[=]     1.......    DF selection by full DF name
-[=]     .1......    DF selection by partial DF name
-[=]     ..0.....    DF selection by path
-[=]     ...0....    DF selection by file identifier
-[=]     ....1...    Implicit DF selection
-[=]     .....0..    Short EF identifier supported
-[=]     ......0.    Record number supported
-[=]     .......0    Record identifier supported
-[=]     40 - Data coding byte
-[=]     00 - Command chaining, length fields and logical channels
-[=]     52  B2F4   Card issuer data
-
-[=] ------------------ ATR fingerprinting ---------------------------
-[+]     n/a
-
-[?] Hint: Try `emv reader`
-
-
-[+] Valid ISO 14443-A tag found
-
-[?] Hint: Try `emv` commands
-[?] Hint: Try `emv` commands
-[\]                                          [|] Searching for LEGIC tag...[/]                                          [-] Searching for TEXKOM tag...[\]                                          [|] Searching for Fuji/Xerox tag...[/]                                          [-] Searching for ISO14443-B tag...[\]                                          [|] Searching for ISO15693 tag...[/]                                          [-] Searching for iCLASS / PicoPass tag...[\]                                          [|] Searching for FeliCa tag...[/]                                          

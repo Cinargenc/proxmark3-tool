@@ -5,9 +5,9 @@ Usage:
     python main.py <proxmark3_log_file.txt>
 
 Example:
-    python main.py proxmark_output.txt
-    python main.py proxmark_output2.txt
     python main.py samples/mifare_classic_1k.txt
+    python main.py samples/hid_proximity.txt
+    python main.py samples/mifare_desfire.txt
 """
 
 import sys
@@ -16,7 +16,6 @@ import os
 # ── Enable ANSI colours on Windows ──────────────────────────────────────────
 if sys.platform == "win32":
     os.system("color")           # activate VT100 in old cmd.exe
-    # Also patch stdout for Windows Terminal / PowerShell
     try:
         import ctypes
         kernel32 = ctypes.windll.kernel32
@@ -24,20 +23,20 @@ if sys.platform == "win32":
     except Exception:
         pass
 
-from parser            import parse_log
-from fingerprint_engine import identify_card
-from card_profiles     import CARD_DATABASE
+from core.parser            import parse_log
+from core.fingerprint_engine import identify_card
+from core.card_profiles     import CARD_DATABASE
 
-from analyzers.uid_analysis      import analyze_uid
-from analyzers.protocol_analysis import analyze_protocol
-from analyzers.timing_analysis   import analyze_timing
-from analyzers.emv_analysis      import analyze_emv
-from analyzers.lf_analysis       import analyze_lf
-from analyzers.mifare_analysis   import analyze_mifare
+from core.analyzers.uid_analysis      import analyze_uid
+from core.analyzers.protocol_analysis import analyze_protocol
+from core.analyzers.timing_analysis   import analyze_timing
+from core.analyzers.emv_analysis      import analyze_emv
+from core.analyzers.lf_analysis       import analyze_lf
+from core.analyzers.mifare_analysis   import analyze_mifare
 
-from scoring       import calculate_score
-from threat_engine import assess_attacks
-from report        import generate_report
+from core.scoring       import calculate_score
+from core.threat_engine import assess_attacks
+from core.report        import generate_report
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -71,22 +70,22 @@ def main():
     # ── 3. Analysers ─────────────────────────────────────────────────────────
     try:
         uid_data = analyze_uid(log_data)
-    except Exception as e:
+    except Exception:
         uid_data = {}
 
     try:
         protocol_data = analyze_protocol(log_data)
-    except Exception as e:
+    except Exception:
         protocol_data = {}
 
     try:
         timing_data = analyze_timing(log_data)
-    except Exception as e:
+    except Exception:
         timing_data = {}
 
     try:
         emv_data = analyze_emv(log_data)
-    except Exception as e:
+    except Exception:
         emv_data = {}
 
     # LF-specific analysis
@@ -94,7 +93,6 @@ def main():
     if log_data.get("scan_mode") == "LF" or log_data.get("lf_id"):
         try:
             lf_data = analyze_lf(log_data)
-            # Merge LF uid info into uid_data
             uid_data.update({
                 "uid_hex":    lf_data.get("uid", ""),
                 "length":     len(lf_data.get("uid", "")) // 2,
@@ -102,7 +100,7 @@ def main():
                 "clone_risk": lf_data.get("clone_risk", "Very High"),
                 "clone_notes": lf_data.get("security_notes", ""),
             })
-        except Exception as e:
+        except Exception:
             lf_data = {}
 
     # MIFARE Classic analysis
@@ -110,7 +108,7 @@ def main():
     if profile.get("crypto") == "Crypto1":
         try:
             mifare_data = analyze_mifare(log_data, profile)
-        except Exception as e:
+        except Exception:
             mifare_data = {}
 
     # ── 4. Threat assessment ─────────────────────────────────────────────────

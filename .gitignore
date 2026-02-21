@@ -4,8 +4,12 @@ __pycache__/
 *.pyo
 *.pyd
 
-# Generated JSON reports — don't commit these
-report_*.json
+# Generated JSON reports
+reports/
+!reports/.gitkeep
+
+# Old root-level test outputs
+proxmark_output*.txt
 
 # Virtual envs
 venv/

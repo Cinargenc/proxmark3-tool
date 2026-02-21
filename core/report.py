@@ -304,11 +304,15 @@ def generate_report(card: dict, uid: dict, protocol: dict, timing: dict,
 
 def _save_json(card, uid, protocol, timing, emv, score, risk,
                attacks, profile, lf_data, mifare_data):
-    """Save a machine-readable JSON report alongside the script."""
-    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename  = f"report_{timestamp}.json"
-    output_dir = os.path.dirname(os.path.abspath(__file__))
-    filepath   = os.path.join(output_dir, filename)
+    """Save a machine-readable JSON report to the reports/ directory."""
+    timestamp  = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename   = f"report_{timestamp}.json"
+
+    # Always save relative to the project root (two levels up from core/)
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    reports_dir  = os.path.join(project_root, "reports")
+    os.makedirs(reports_dir, exist_ok=True)
+    filepath = os.path.join(reports_dir, filename)
 
     # Simplify attacks for JSON
     attacks_json = {}
@@ -335,6 +339,6 @@ def _save_json(card, uid, protocol, timing, emv, score, risk,
     try:
         with open(filepath, "w", encoding="utf-8") as f:
             json.dump(payload, f, indent=2, ensure_ascii=False)
-        print(f"  📄 JSON report saved → {C.CYAN}{filename}{C.RESET}\n")
+        print(f"  📄 JSON report saved → {C.CYAN}reports/{filename}{C.RESET}\n")
     except Exception as e:
         print(f"  ⚠  Could not save JSON report: {e}\n")

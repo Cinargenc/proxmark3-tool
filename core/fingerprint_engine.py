@@ -1,4 +1,4 @@
-from card_profiles import CARD_DATABASE
+from core.card_profiles import CARD_DATABASE
 
 # ──────────────────────────────────────────────────────────────────────────────
 #  SAK → candidate card type mapping
