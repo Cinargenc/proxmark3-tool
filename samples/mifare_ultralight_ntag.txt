@@ -1,4 +1,4 @@
-[=] Session log /home/kali/.proxmark3/logs/log_20260220130000.txt
+[=] Session log /home/kali/.proxmark3/logs/log_20260220132000.txt
 [+] loaded `/home/kali/.proxmark3/preferences.json`
 [+] execute command from commandline: hf search
 
@@ -7,14 +7,14 @@
 [usb|script] pm3 --> hf search
 
 [=] ---------- ISO14443-A Information ----------
-[+]  UID: E5 A3 1C 08   ( single )
-[+] ATQA: 00 04
-[+]  SAK: 08 [2]
+[+]  UID: 04 71 A2 DA 3B 6C 80   ( double )
+[+] ATQA: 00 44
+[+]  SAK: 00 [3]
 [+]       NXP Semiconductors Germany
 [+] Possible types:
-[+]    MIFARE Classic 1K
-[+]    MIFARE Classic 1K (Emulated)
+[+]    MIFARE Ultralight
+[+]    NTAG 213
 
 [+] Valid ISO 14443-A tag found
 
-[?] Hint: Try `hf mf` commands
+[?] Hint: Try `hf mfu` commands

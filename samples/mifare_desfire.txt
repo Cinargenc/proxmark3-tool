@@ -1,0 +1,25 @@
+[=] Session log /home/kali/.proxmark3/logs/log_20260220133000.txt
+[+] loaded `/home/kali/.proxmark3/preferences.json`
+[+] execute command from commandline: hf search
+
+[+] Using UART port /dev/ttyACM0
+[+] Communicating with PM3 over USB-CDC
+[usb|script] pm3 --> hf search
+
+[=] ---------- ISO14443-A Information ----------
+[+]  UID: 04 E8 B3 92 17 5A 61   ( double )
+[+] ATQA: 00 48
+[+]  SAK: 20 [1]
+[+]       NXP Semiconductors Germany
+[+] Possible types:
+[+]    MIFARE DESFire EV1
+[=] -------------------------- ATS ----------------------------------
+[+] ATS: 06 75 77 81 02 80 [ 09 AB ]
+[=]      06...............  TL    length is 6 bytes
+[=]      ...75............  T0    TA1 is present, TB1 is present, TC1 is NOT present, FSCI is 5 (FSC = 64)
+[=]      ......77.........  TA1   different divisors are NOT supported, DR: [2, 4], DS: [2, 4]
+[=]      .........81......  TB1   SFGI = 1 (SFGT = 8192/fc), FWI = 8 (FWT = 1048576/fc)
+
+[+] Valid ISO 14443-A tag found
+
+[?] Hint: Try `hf mfdes` commands

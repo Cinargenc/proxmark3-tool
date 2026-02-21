@@ -1,0 +1,22 @@
+[=] Session log /home/kali/.proxmark3/logs/log_20260220135000.txt
+[+] loaded `/home/kali/.proxmark3/preferences.json`
+[+] execute command from commandline: lf search
+
+[+] Using UART port /dev/ttyACM0
+[+] Communicating with PM3 over USB-CDC
+[usb|script] pm3 --> lf search
+
+[=] Note: False Positives ARE possible
+[=] 
+[=] Checking for known tags...
+[=] 
+
+[+] HID Prox TAG ID: 2006E22F85 ( 40bit )
+[=] -------- Possible de-scramble patterns ---------
+[+]     Standard 26bit: FC = 111  CN = 8965
+[+]     HID H10301: Facility=111, Card=8965
+[=] ------------------------------------------------
+
+[+] Valid HID Prox ID found!
+
+[=] Couldn't identify a chipset
