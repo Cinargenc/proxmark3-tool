@@ -1,0 +1,29 @@
+[usb] pm3 --> hf search
+
+ 🕐 Searching for HF tags...
+
+[+] Valid ISO14443-A tag found
+
+[=] UID  : 3B 7A 12 F0
+[=] ATQA : 00 48
+[=] SAK  : 20 [1]
+[=] ATS  : 0E 79 82 02 20 31 75 77 35 A0 00 00 40 00 01 00
+
+[=] IC Manufacturer byte: 3B (NXP Semiconductors — NQ-series)
+[=] Possible types:
+    * EMV Contactless Payment Card (Visa/Mastercard/Troy)
+    * Bank card — contactless credit/debit
+
+[+] Manufacturer: NXP Semiconductors Germany
+[=] Freq: 13.56 MHz
+[=] Standard: ISO14443-A / EMVCo
+[=] Crypto: RSA + dynamic AES ARQC per transaction
+[=] FWI: 7
+CID is supported
+
+[+] EMV contactless card detected.
+[=] emv reader
+[=] Possible: PAN readable without PIN
+    * Visa Contactless
+    * Mastercard PayPass
+    * Troy (Turkish domestic scheme)

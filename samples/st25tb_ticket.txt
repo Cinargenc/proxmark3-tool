@@ -1,0 +1,22 @@
+[usb] pm3 --> hf search
+
+ 🕐 Searching for HF tags...
+
+[+] Valid ISO14443-B tag found
+
+[=] PUPI : B7 3A 91 C2
+[=] App Data: 00 00
+[=] Protocol Info: 00 79 00
+[=] Possible types:
+    * ST25TB / SRI512 (STMicroelectronics)
+    * ISO14443-B Type B
+
+[=] Standard: ISO14443-B
+[=] Crypto: None (static UID)
+[=] Memory: 512 bits / 8 blocks (SRI512)
+[=] Used in: Paper transit tickets, parking tickets, loyalty cards
+
+[+] STMicroelectronics ST25TB detected.
+[=] Block 0: FF FF FF FF (default/unformatted)
+[=] Block 1: A3 91 C2 00
+[=] hf 14b reader

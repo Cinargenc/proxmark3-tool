@@ -21,7 +21,15 @@ def _probe_mode(content: str) -> str:
     # Fallback: look for known HF markers
     if "ISO14443-A" in content or "SAK:" in content:
         return "HF"
+    if "ISO14443-B" in content or "PUPI" in content or "Calypso" in content:
+        return "HF"
+    if "FeliCa" in content or "felica" in content.lower():
+        return "HF"
+    if "iCLASS" in content or "LEGIC" in content:
+        return "HF"
     if "EM 410x" in content or "EM410x" in content:
+        return "LF"
+    if "HID Prox" in content or "Indala" in content or "AWID" in content:
         return "LF"
     return "UNKNOWN"
 
@@ -86,6 +94,21 @@ def _parse_hf(content: str, data: dict):
     # DESFire
     data["desfire"] = bool(re.search(r'DESFire|DESFIRE', content, re.IGNORECASE))
 
+    # FeliCa
+    data["felica"] = bool(re.search(r'FeliCa|felica', content, re.IGNORECASE))
+
+    # iCLASS
+    data["iclass"] = bool(re.search(r'iCLASS|iClass', content, re.IGNORECASE))
+
+    # LEGIC
+    data["legic"] = bool(re.search(r'LEGIC', content, re.IGNORECASE))
+
+    # Calypso
+    data["calypso"] = bool(re.search(r'Calypso|NAVIGO|MOBIB', content, re.IGNORECASE))
+
+    # ISO14443-B
+    data["iso14443b"] = bool(re.search(r'ISO14443-B|ISO14443B|PUPI', content, re.IGNORECASE))
+
     # Possible types block
     m = re.search(r'Possible types:\s*(.*?)(?=\[=\]|\Z)', content, re.DOTALL)
     if m:
@@ -139,6 +162,26 @@ def _parse_lf(content: str, data: dict):
     # AWID
     if re.search(r'AWID', content, re.IGNORECASE):
         data["lf_type"] = "AWID"
+
+    # Indala / Motorola
+    m = re.search(r'Indala\s+ID\s*[:\s]*([0-9A-Fa-f]+)', content, re.IGNORECASE)
+    if m:
+        data["lf_type"] = "INDALA"
+        data["lf_id"] = m.group(1).upper()
+    elif re.search(r'Indala|Motorola', content, re.IGNORECASE):
+        data["lf_type"] = "INDALA"
+
+    # Paradox
+    if re.search(r'Paradox', content, re.IGNORECASE):
+        data["lf_type"] = "PARADOX"
+
+    # T5577 / T55xx
+    if re.search(r'T5577|T55xx|T55X', content, re.IGNORECASE):
+        data["lf_type"] = "T5577"
+
+    # EM4200
+    if re.search(r'EM4200|EM 4200', content, re.IGNORECASE):
+        data["lf_type"] = "EM4200"
 
 
 # ──────────────────────────────────────────────────────────

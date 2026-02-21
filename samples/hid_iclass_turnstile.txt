@@ -1,0 +1,26 @@
+[usb] pm3 --> hf search
+
+ 🕐 Searching for HF tags...
+
+[+] Valid ISO15693 (Vicinity) tag found
+
+[+] iCLASS detected.
+[=] CSN  : E0 18 04 2A 7B 3C 11 09
+[=] Config: 12 FF FF FF 7F 1D
+[=] AIA  : FF FF FF FF FF FF FF FF
+[=] Credential Type: HID iCLASS Standard (2k)
+
+[=] Possible types:
+    * HID iCLASS
+    * ISO15693 / ISO18000-3 vicinity card
+    * Corporate / campus turnstile access
+    * Cafeteria / yemekhane giriş kartı
+
+[=] Freq: 13.56 MHz
+[=] Standard: ISO15693 (HID proprietary layer)
+[=] Crypto: HID proprietary DES-based (MASTER KEY KNOWN - BROKEN)
+[=] hf iclass info
+[=] hf iclass dump
+
+[!] SECURITY WARNING: iCLASS master diversification key has been publicly leaked.
+    Any iCLASS standard card can be cloned once the key is known.

@@ -1,0 +1,22 @@
+[usb] pm3 --> hf search
+
+ 🕐 Searching for HF tags...
+
+[+] Valid ISO15693 (Vicinity) tag found
+
+[=] UID  : E0 04 01 00 7B 3C 11 09
+[=] Possible types:
+    * NXP ICODE SLIX
+    * ISO15693 Vicinity Card
+    * Library book tag / kütüphane etiketi
+    * Asset tracking / retail EAS tag
+
+[=] Standard: ISO15693
+[=] Crypto: None (UID static, plaintext)
+[=] Memory: 896 bits (SLIX2)
+[=] AFI: C0 (Library standard)
+[=] DSFID: 00
+
+[+] NXP ICODE SLIX detected.
+[=] hf 15 reader
+[=] hf 15 dump

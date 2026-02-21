@@ -1,0 +1,18 @@
+[usb] pm3 --> lf search
+
+ 🕐 Searching for LF tags...
+
+[+] Valid HID Prox tag found
+
+[=] Facility code: 215
+[=] Card number: 12345
+[=] DEZ 8: 01412345
+[=] DEZ 10: 0141234567
+[=] Raw: 2006F5EC9
+[=] Possible types:
+    * HID Proximity (Corporate 1000)
+    * LF 125 kHz Prox card
+    * Common in: turnstiles, building access, cafeteria gates, parking barriers
+
+HID Prox TAG ID: 2006F5EC9
+[+] Manufacturer: HID Global

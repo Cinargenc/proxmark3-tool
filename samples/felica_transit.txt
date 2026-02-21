@@ -1,0 +1,24 @@
+[usb] pm3 --> hf search
+
+ 🕐 Searching for HF tags...
+
+[+] FeliCa detected.
+[=] UID  : 0112 6B7A 8C9D E001
+[=] PMm  : 0F0D 1200 0000 00B3
+[=] SC   : 88b4
+[=] RCm  : 00 00
+
+[+] Manufacturer: Sony Corporation
+[+] TYPE: Sony FeliCa Standard (NFC Forum Type 3)
+[=] Possible types:
+    * Sony FeliCa
+    * Transit Card (Suica / PASMO / Octopus / EZ-Link compatible)
+    * ISO18092 (NFC-F) @ 212 kbps
+
+[=] Freq: 13.56 MHz
+[=] Protocol: ISO18092 / JIS X 6319-4
+[=] Crypto: Triple-DES (session keys) / AES
+[=] Answer to Request: 01 12 6B 7A 8C 9D E0 01 0F 0D 12 00 00 00 00 B3 88 B4 00 00
+
+[=] hf felica reader
+[+]  FeliCa  # Block count: 16  Encrypted: Yes

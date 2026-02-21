@@ -1,0 +1,28 @@
+[usb] pm3 --> hf search
+
+ 🕐 Searching for HF tags...
+
+[+] Valid ISO14443-A tag found
+
+[=] UID  : 04 A3 BE 6C 29 4F 80
+[=] ATQA : 00 44
+[=] SAK  : 20 [1]
+[=] ATS  : 06 75 77 81 02 80  (DESFire EV1)
+
+[=] IC Manufacturer byte: 04 (NXP Semiconductors)
+[=] Possible types:
+    * MIFARE DESFire
+    * Transit Card (İstanbulkart / Ankarakart / OV-Chipkaart / Oyster compatible)
+
+[+] Manufacturer: NXP Semiconductors Germany
+[=] Freq: 13.56 MHz
+[=] Standard: ISO14443-A / ISO7816
+[=] Crypto: 3DES / AES-128 (mutual authentication)
+[=] FWI: 8
+CID is supported
+[=] Application count: 3
+[=] hf mfdes info
+
+[+] MIFARE DESFire EV1 detected.
+    Multi-application transit/access card.
+    AES session keys negotiated per transaction.

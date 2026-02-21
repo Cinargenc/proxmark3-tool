@@ -1,0 +1,25 @@
+[usb] pm3 --> hf search
+
+ 🕐 Searching for HF tags...
+
+[+] Valid ISO14443-A tag found
+
+[=] UID  : E5 A3 1C 08
+[=] ATQA : 00 04
+[=] SAK  : 08 [1]
+
+[=] IC Manufacturer byte: E5 (NXP Semiconductors)
+[=] Possible types:
+    * MIFARE Classic 1K
+    * University campus card / cafeteria / yemekhane
+    * Dormitory turnstile / yurt giriş kartı
+
+[=] Freq: 13.56 MHz
+[=] Standard: ISO14443-A
+[=] Crypto: Crypto1 (BROKEN — all sector keys recoverable)
+
+[+] MIFARE Classic 1K detected.
+[=] hf mf chk --1k
+[=] hf mf darkside
+[=] hf mf nested --1k --ks
+[=] Default keys likely in use. Full dump possible in seconds.

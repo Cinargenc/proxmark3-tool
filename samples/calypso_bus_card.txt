@@ -1,0 +1,22 @@
+[usb] pm3 --> hf search
+
+ 🕐 Searching for HF tags...
+
+[+] Valid ISO14443-B tag found
+
+[=] PUPI : A3 12 4F 7E
+[=] App Data: 20 00
+[=] Protocol Info: 11 77 81
+[=] Possible types:
+    * Calypso Transit Card
+    * ISO14443-B
+    * NAVIGO (Paris Metro) / MOBIB (Brussels) compatible
+
+[=] Standard: ISO14443-B / CEN EN1545
+[=] Crypto: Triple-DES (application layer)
+[=] Protocol: T=CL (ISO14443-4)
+
+[+] Calypso application detected.
+[=] hf 14b reader
+[=] hf calypso reader (if supported)
+[=] Network operator: RATP / Transit Authority
