@@ -4,7 +4,7 @@
 
 ---
 
-## ⚡ Tek Satırda Kur (Linux / macOS / WSL)
+##  Tek Satırda Kur (Linux / macOS / WSL)
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Cinargenc/proxmark3-tool/main/install.sh | bash
