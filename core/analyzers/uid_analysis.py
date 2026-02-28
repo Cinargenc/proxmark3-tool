@@ -56,11 +56,21 @@ def analyze_uid(data: dict) -> dict:
     # ── UID length → clone risk ───────────────────────────────────────────────
     scan_mode = data.get("scan_mode", "HF")
 
+    # EMV payment cards use randomised / tokenised UIDs per session
+    is_payment = data.get("emv", False)
+
     if scan_mode == "LF":
         result["clone_risk"] = "Very High"
         result["clone_notes"] = (
             "LF 125 kHz tags have no encryption. "
             "UID can be cloned to a T5577 blank card in seconds."
+        )
+    elif is_payment:
+        result["clone_risk"] = "Low"
+        result["clone_notes"] = (
+            "EMV payment cards use randomised / tokenised UIDs per session. "
+            "Cloning the UID alone does not enable payment fraud — "
+            "each transaction requires a fresh ARQC cryptogram from the card chip."
         )
     elif length == 4:
         result["clone_risk"] = "High"
@@ -82,3 +92,4 @@ def analyze_uid(data: dict) -> dict:
         result["clone_notes"] = "Could not determine clone risk."
 
     return result
+

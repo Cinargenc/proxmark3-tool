@@ -63,8 +63,16 @@ def identify_card(log_data: dict) -> str:
             return "EM4200"
         return "EM410X"        # default LF card
 
-    # ── 2. FeliCa ─────────────────────────────────────────────────────────────
-    if "FELICA" in raw or "FELICĂ" in raw or "FeliCa" in str(log_data):
+    # ── 2. EMV — must come before FeliCa (EMV ATS bytes can contain FeliCa markers) ──
+    if log_data.get("emv") and (
+        "EMV" in raw or "PAYMENT" in raw or "VISA" in raw
+        or "MASTERCARD" in raw or "PAYPASS" in raw
+        or "PAYWAVE" in raw or "TROY" in raw
+    ):
+        return "EMV_PAYMENT"
+
+    # ── 3. FeliCa ──────────────────────────────────────────────────
+    if ("FELICA" in raw or "FeliCa" in str(log_data)) and not log_data.get("emv"):
         if "LITE" in raw:
             return "FELICA_LITE"
         return "FELICA"
@@ -151,10 +159,9 @@ def identify_card(log_data: dict) -> str:
         return "MIFARE_CLASSIC_1K"
     if atqa == "0044":
         return "MIFARE_ULTRALIGHT"
-    if atqa == "0048":
-        return "EMV_PAYMENT"
     if atqa == "0344":
         return "MIFARE_ULTRALIGHT_C"
+    # 0048 is already handled above (EMV block)
 
     # ── 8. EMV text present ───────────────────────────────────────────────────
     if log_data.get("emv"):

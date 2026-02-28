@@ -204,6 +204,9 @@ def _check_no_apdu(profile: dict, protocol: dict) -> Optional[VulnFinding]:
 def _check_no_mutual_auth(profile: dict) -> Optional[VulnFinding]:
     if profile.get("mutual_auth") or "LF" in profile.get("family", ""):
         return None
+    # EMV payment cards implicitly have terminal-card mutual auth via ARQC/ARPC exchanges
+    if profile.get("payment_card"):
+        return None
     return VulnFinding(
         vuln_id="RFID-004",
         title="No Mutual Authentication — One-Sided Identity Verification",
@@ -236,9 +239,13 @@ def _check_no_mutual_auth(profile: dict) -> Optional[VulnFinding]:
     )
 
 
-def _check_static_uid(uid: dict) -> Optional[VulnFinding]:
+def _check_static_uid(uid: dict, profile: dict) -> Optional[VulnFinding]:
     clone_risk = uid.get("clone_risk", "Unknown")
     if clone_risk not in ("Very High", "High"):
+        return None
+    # EMV payment cards: UID cloning is irrelevant — ARQC cryptogram cannot be copied.
+    # Even if UID is cloned, the attacker cannot generate valid transaction cryptograms.
+    if profile.get("payment_card"):
         return None
     return VulnFinding(
         vuln_id="RFID-005",
@@ -448,7 +455,7 @@ def generate_vuln_report(
         _check_broken_iclass(profile),
         _check_no_apdu(profile, protocol),
         _check_no_mutual_auth(profile),
-        _check_static_uid(uid),
+        _check_static_uid(uid, profile),   # payment cards excluded inside
         _check_relay_window(timing, profile),
         _check_emv_skimming(emv),
         _check_replay_attack(profile),
@@ -461,15 +468,31 @@ def generate_vuln_report(
     findings.sort(key=lambda f: f.cvss_score, reverse=True)
 
     # Determine security tier from highest CVSS
+    # Special case: payment cards with strong crypto (RSA/AES, no broken_crypto)
+    # should not be dragged to LOW tier purely by skimming/relay — those are
+    # inherent contactless risks, not card implementation flaws.
+    is_payment_secure = (
+        profile.get("payment_card")
+        and profile.get("crypto")
+        and not profile.get("broken_crypto")
+    )
+
     if not findings:
         tier = "HIGH"
     else:
         top = findings[0].cvss_score
-        if top >= 7.0:
-            tier = "LOW"
-        elif top >= 4.1:
-            tier = "MEDIUM"
+        if is_payment_secure:
+            # For strong EMV cards: relay/skimming <= 6.0 -> MEDIUM, others LOW
+            if top >= 7.0:
+                tier = "LOW"    # only if a genuinely critical issue exists
+            else:
+                tier = "MEDIUM" # relay + skimming are inherent contactless risks
         else:
-            tier = "HIGH"
+            if top >= 7.0:
+                tier = "LOW"
+            elif top >= 4.1:
+                tier = "MEDIUM"
+            else:
+                tier = "HIGH"
 
     return findings, tier
