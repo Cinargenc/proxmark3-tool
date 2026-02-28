@@ -108,6 +108,7 @@ def _parse_hf(content: str, data: dict):
 
     # ISO14443-B
     data["iso14443b"] = bool(re.search(r'ISO14443-B|ISO14443B|PUPI', content, re.IGNORECASE))
+    data["iso15693"] = bool(re.search(r'ISO15693|Vicinity|ICODE|SLIX', content, re.IGNORECASE))
 
     # Possible types block
     m = re.search(r'Possible types:\s*(.*?)(?=\[=\]|\Z)', content, re.DOTALL)
