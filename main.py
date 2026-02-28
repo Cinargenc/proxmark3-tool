@@ -36,7 +36,9 @@ from core.analyzers.mifare_analysis   import analyze_mifare
 
 from core.scoring       import calculate_score
 from core.threat_engine import assess_attacks
-from core.report        import generate_report
+from core.report        import generate_report, generate_vuln_section
+from core.vuln_engine        import generate_vuln_report
+from core.vuln_report_writer import save_vuln_markdown
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -132,6 +134,27 @@ def main():
         lf_data      = lf_data,
         mifare_data  = mifare_data,
     )
+
+    # ── 7. Vulnerability analysis & security tier ───────────────────────────────────
+    findings, tier = generate_vuln_report(
+        profile  = profile,
+        uid      = uid_data,
+        protocol = protocol_data,
+        timing   = timing_data,
+        emv      = emv_data,
+    )
+
+    # Print terminal vulnerability section
+    generate_vuln_section(findings, tier)
+
+    # Save Markdown vuln report to reports/
+    md_path = save_vuln_markdown(findings, tier, card, profile)
+    from core.report import C
+    if not md_path.startswith("[ERROR"):
+        rel = "reports/" + md_path.split("/")[-1].split("\\")[-1]
+        print(f"  📝 Vuln report saved  → {C.CYAN}{rel}{C.RESET}\n")
+    else:
+        print(f"  ⚠  {md_path}\n")
 
 
 if __name__ == "__main__":

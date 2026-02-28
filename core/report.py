@@ -302,6 +302,96 @@ def generate_report(card: dict, uid: dict, protocol: dict, timing: dict,
                profile, lf_data, mifare_data)
 
 
+def generate_vuln_section(findings: list, tier: str, width: int = 66):
+    """
+    Print Section 9 — VULNERABILITY ANALYSIS in the terminal.
+
+    Parameters
+    ----------
+    findings : list[VulnFinding]  from vuln_engine.generate_vuln_report()
+    tier     : "LOW" | "MEDIUM" | "HIGH"
+    """
+    # ── Tier banner ───────────────────────────────────────────────────────────
+    tier_styles = {
+        "LOW":    (C.RED,    C.BG_RED,  "LOW  —  Insecure Card"),
+        "MEDIUM": (C.YELLOW, C.BG_YEL,  "MEDIUM  —  Moderate Risk"),
+        "HIGH":   (C.GREEN,  C.BG_GRN,  "HIGH  —  Secure Card"),
+    }
+    tc, bg, label = tier_styles.get(tier, (C.WHITE, "", tier))
+
+    print(_hdr("9 · VULNERABILITY ANALYSIS & SECURITY TIER"))
+    print()
+    banner = f"  SECURITY TIER :  {label}  "
+    pad = " " * max(0, width - len(banner) - 2)
+    print(f"  {bg}{C.BOLD}{C.WHITE} SECURITY TIER :  {label}  {pad}{C.RESET}")
+    print()
+
+    if not findings:
+        print(f"    {C.GREEN}✓  No significant vulnerabilities identified for this card type.{C.RESET}")
+        print(f"\n{C.CYAN}{'=' * width}{C.RESET}\n")
+        return
+
+    # ── Per-finding summary table ──────────────────────────────────────────────
+    sev_colors = {
+        "CRITICAL": C.RED,
+        "HIGH":     C.ORANGE,
+        "MEDIUM":   C.YELLOW,
+        "LOW":      C.GREEN,
+        "NONE":     C.DIM,
+    }
+
+    print(f"  {C.DIM}{'ID':<10}{'CVSS':>6}  {'SEV':<10}  {'Title'}{C.RESET}")
+    print(f"  {C.DIM}{'-'*60}{C.RESET}")
+    for f in findings:
+        sc = sev_colors.get(f.cvss_severity, C.WHITE)
+        score_str = f"{f.cvss_score:.1f}"
+        print(
+            f"  {C.CYAN}{f.vuln_id:<10}{C.RESET}"
+            f"{C.BOLD}{score_str:>6}{C.RESET}  "
+            f"{sc}{f.cvss_severity:<10}{C.RESET}  "
+            f"{C.WHITE}{f.title}{C.RESET}"
+        )
+
+    # ── Detail blocks for HIGH / CRITICAL findings ────────────────────────────
+    high_crit = [f for f in findings if f.cvss_severity in ("CRITICAL", "HIGH")]
+    if high_crit:
+        print(f"\n  {C.RED}{C.BOLD}Exploit Scenarios — Critical / High Findings:{C.RESET}")
+        for f in high_crit:
+            sc = sev_colors.get(f.cvss_severity, C.WHITE)
+            print(f"\n  {sc}{C.BOLD}[{f.vuln_id}] {f.title}{C.RESET}")
+            print(f"  {C.DIM}CVSS: {f.cvss_score:.1f}  Vector: {f.cvss_vector}{C.RESET}")
+            print(f"\n  {C.WHITE}Description:{C.RESET}")
+            # word-wrap description at 70 chars
+            desc_words = f.description.split()
+            line = "    "
+            for word in desc_words:
+                if len(line) + len(word) + 1 > 70:
+                    print(f"{C.DIM}{line}{C.RESET}")
+                    line = "    " + word + " "
+                else:
+                    line += word + " "
+            if line.strip():
+                print(f"{C.DIM}{line}{C.RESET}")
+
+            print(f"\n  {C.RED}Exploit:{C.RESET}")
+            for step in f.exploit_scenario.split("\n"):
+                print(f"    {C.DIM}{step}{C.RESET}")
+
+            print(f"\n  {C.GREEN}Remediation:{C.RESET}")
+            rem_words = f.remediation.split()
+            line = "    "
+            for word in rem_words:
+                if len(line) + len(word) + 1 > 70:
+                    print(f"{C.WHITE}{line}{C.RESET}")
+                    line = "    " + word + " "
+                else:
+                    line += word + " "
+            if line.strip():
+                print(f"{C.WHITE}{line}{C.RESET}")
+
+    print(f"\n{C.CYAN}{'=' * width}{C.RESET}\n")
+
+
 def _save_json(card, uid, protocol, timing, emv, score, risk,
                attacks, profile, lf_data, mifare_data):
     """Save a machine-readable JSON report to the reports/ directory."""
