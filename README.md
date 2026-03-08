@@ -16,8 +16,13 @@ Bu araç **yalnızca eğitim, araştırma ve yetkili güvenlik testi** amaçlı 
 > **Kötüye kullanım durumunda geliştirici hiçbir sorumluluk kabul etmez.**
 
 ---
+## Projenin detaylarını ve örnek bir kart analizini anlattığım blog yazım
 
-## 🚀 Tek Satırda Kur (Linux / macOS / WSL)
+https://cybermapgroup.com/tr/blog/rfid-kart-guvenlik-analizi-proxmark-rfid-analyzer-projesi
+
+---
+
+## Tek Satırda Kur (Linux / macOS / WSL)
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Cinargenc/proxmark3_rfid_analyzer/main/install.sh | bash
