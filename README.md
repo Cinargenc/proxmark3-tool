@@ -1,4 +1,4 @@
-# proxmark3_rfid_analyzer
+# PROXMARK RFID ANALYZER
 
 > **RFID/NFC kart güvenlik analiz aracı** — Proxmark3 çıktılarını okuyarak kart türünü otomatik tespit eder, CVSS tabanlı güvenlik açığı analizi yapar, saldırı matrisini çıkarır ve hem terminal hem Markdown rapor üretir.
 
