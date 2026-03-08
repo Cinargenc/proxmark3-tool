@@ -25,7 +25,7 @@ https://cybermapgroup.com/tr/blog/rfid-kart-guvenlik-analizi-proxmark-rfid-analy
 ## Tek Satırda Kur (Linux / macOS / WSL)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Cinargenc/proxmark3_rfid_analyzer/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Cinargenc/proxmark_rfid_analyzer/main/install.sh | bash
 ```
 
 Gereksinimler: `git`, `python3` (harici kütüphane gerekmez)
@@ -35,8 +35,7 @@ Gereksinimler: `git`, `python3` (harici kütüphane gerekmez)
 ## Manuel Kurulum
 
 ```bash
-git clone https://github.com/Cinargenc/proxmark3_rfid_analyzer.git
-cd proxmark3-tool
+git clone https://github.com/Cinargenc/proxmark_rfid_analyzer.git
 python3 main.py samples/mifare_classic_1k.txt
 ```
 
